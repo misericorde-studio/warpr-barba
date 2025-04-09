@@ -888,11 +888,11 @@ export class AirdropAnimation {
         if (!this.scene || !this.camera || !this.renderer) {
             return;
         }
-
+        
         let shrinkProgress = 0;
         if (this.hasScrolled) {
             const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const scrolled = window.scrollY;
+        const scrolled = window.scrollY;
             const globalProgress = (scrolled / scrollHeight) * 100;
             const shrinkStart = 55;
             const shrinkEnd = 70;
@@ -1179,9 +1179,7 @@ export class InvestorAnimation {
             return;
         }
         this.visibilityObserver = this.createObserver(this.container);
-        const pixelRatio = window.innerWidth <= 768 ? Math.min(window.devicePixelRatio) : 1;
-        // this.renderer.setPixelRatio(window.devicePixelRatio);
-
+        const pixelRatio = 1; // Même pixel ratio sur mobile et desktop
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(this.config.backgroundColor);
         const aspect = this.container.clientWidth / this.container.clientHeight;
@@ -2004,9 +2002,7 @@ export class InvestorAnimation {
             this.borderParticles.material.uniforms.scaleFactor.value = scaleFactor;
             this.borderParticles.material.uniforms.pointSize.value = this.config.borderParticleSize * (isMobile ? 1.2 : 1.0);
         }
-        const pixelRatio = isMobile ? Math.min(window.devicePixelRatio) : 1;
-        // this.renderer.setPixelRatio(window.devicePixelRatio);
-
+        const pixelRatio = 1; // Même pixel ratio sur mobile et desktop
         this.renderer.setPixelRatio(pixelRatio);
         this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
     }
@@ -2200,8 +2196,7 @@ export class InvestorAnimation {
                 }
                 
                 // Ajuster le ratio de pixels et la taille du renderer
-                const pixelRatio = isMobile ? Math.min(window.devicePixelRatio):1;
-
+                const pixelRatio = 1; // Même pixel ratio sur mobile et desktop
                 this.renderer.setPixelRatio(pixelRatio);
                 this.renderer.setSize(this.container.clientWidth, this.container.clientHeight, false);
                 
