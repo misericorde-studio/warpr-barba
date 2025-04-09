@@ -780,12 +780,9 @@ export class AirdropAnimation {
             
             this.init();
             
-            // Add event listeners
-            window.addEventListener('resize', this.updateRendererSize);
-            window.addEventListener('scroll', this.handleScroll);
+            // Les écouteurs d'événements sont déjà ajoutés dans init(), pas besoin de les ajouter ici
             
-            // Start animation loop
-            this.animate();
+            // Start animation loop (déjà démarré dans init())
         }
     }
 
@@ -799,9 +796,23 @@ export class AirdropAnimation {
         }
 
         // Remove event listeners
-        window.removeEventListener('resize', this.handleResize);
+        window.removeEventListener('resize', this.updateRendererSize);
         window.removeEventListener('scroll', this.handleScroll);
-        window.removeEventListener('beforeunload', this.destroy);
+        
+        // Supprimer les objets de la scène avant de nettoyer leurs ressources
+        if (this.scene) {
+            if (this.particlesGroup) {
+                this.scene.remove(this.particlesGroup);
+            }
+            
+            if (this.guideCircles) {
+                this.scene.remove(this.guideCircles);
+            }
+        }
+        
+        if (this.outerCircleGroup && this.particlesGroup) {
+            this.particlesGroup.remove(this.outerCircleGroup);
+        }
 
         // Clean up Three.js resources
         if (this.innerParticles) {
@@ -813,56 +824,64 @@ export class AirdropAnimation {
                     particle.material.dispose();
                 }
             }
+            // Détruire les références circulaires
+            this.innerParticles.forEach(particle => {
+                // Supprimer les références au config pour éviter les références circulaires
+                if (particle) particle.config = null;
+            });
         }
-
-        if (this.outerParticles) {
-            for (const particle of this.outerParticles) {
-                if (particle && particle.geometry) {
-                    particle.geometry.dispose();
-                }
-                if (particle && particle.material) {
-                    particle.material.dispose();
-                }
-            }
-        }
-
-        if (this.innerGeometry) {
-            this.innerGeometry.dispose();
-        }
-
-        if (this.outerGeometry) {
-            this.outerGeometry.dispose();
-        }
-
-        if (this.innerMaterial) {
-            this.innerMaterial.dispose();
-        }
-
-        if (this.outerMaterial) {
-            this.outerMaterial.dispose();
-        }
-
-        // Remove canvas
+        
+        // Nettoyer les ressources THREE.js
+        if (this.geometry) this.geometry.dispose();
+        if (this.material) this.material.dispose();
+        
+        // Nettoyer les géométries et matériaux spécifiques
+        if (this.particlesGeometry) this.particlesGeometry.dispose();
+        if (this.borderParticlesGeometry) this.borderParticlesGeometry.dispose();
+        if (this.particlesMaterial) this.particlesMaterial.dispose();
+        if (this.borderParticlesMaterial) this.borderParticlesMaterial.dispose();
+        
+        // Supprimer le renderer et le canvas du DOM
         if (this.renderer) {
             this.renderer.dispose();
-            if (this.renderer.domElement) {
+            if (this.renderer.domElement && this.renderer.domElement.parentNode) {
                 this.renderer.domElement.remove();
             }
         }
-
-        // Clear references
+        
+        // Nettoyer les caches de particules
+        for (const key in this.particleCache) {
+            if (this.particleCache[key] && this.particleCache[key].length) {
+                this.particleCache[key] = null;
+            }
+        }
+        
+        // Nettoyer les caches mathématiques
+        for (const key in this.mathCache) {
+            if (this.mathCache[key] && this.mathCache[key].length) {
+                this.mathCache[key] = null;
+            }
+        }
+        
+        // Supprimer toutes les références pour permettre au garbage collector de travailler
+        this.particleCache = null;
+        this.mathCache = null;
+        this.tempVector = null;
+        this.tempQuaternion = null;
+        this.tempMatrix = null;
         this.scene = null;
         this.camera = null;
         this.renderer = null;
-        this.innerParticles = null;
-        this.outerParticles = null;
-        this.innerGeometry = null;
-        this.outerGeometry = null;
-        this.innerMaterial = null;
-        this.outerMaterial = null;
-        this.particlesGroup = null;
-        this.outerCircleGroup = null;
-        this.guideCircles = null;
+        this.particles = null;
+        this.borderParticles = null;
+        this.particlesGeometry = null;
+        this.borderParticlesGeometry = null;
+        this.particlesMaterial = null;
+        this.borderParticlesMaterial = null;
+        this.container = null;
+        this.planeMesh = null;
+        this.visibilityObserver = null;
+        this.prewarmObserver = null;
     }
 
     handleScroll() {
@@ -1013,6 +1032,9 @@ export class AirdropAnimation {
 
 export class InvestorAnimation {
     constructor() {
+        // Flag pour indiquer si l'animation a été détruite
+        this.isDestroyed = false;
+        
         // Define configuration as a class property
         this.config = {
             radius: 1.5,
@@ -1378,6 +1400,9 @@ export class InvestorAnimation {
 
 
     animate(timestamp) {
+        // Si l'animation a été détruite, ne pas continuer
+        if (this.isDestroyed) return;
+        
         requestAnimationFrame(this.animate);
         
         // Pré-positionnement des particules au premier frame si nécessaire

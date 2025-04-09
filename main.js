@@ -130,6 +130,7 @@ function cleanupPage() {
     }
 }
 
+// Configuration de Barba.js avec des transitions spécifiques par namespace
 barba.init({
     debug: true,
     views: [
@@ -150,77 +151,105 @@ barba.init({
             }
         }
     ],
-    transitions: [{
-        name: 'default-transition',
-        async leave(data) {
-            console.log('Transition - leave', data.current.namespace, '->', data.next.namespace);
-            await destroyAnimation();
-            await gsap.to(data.current.container, {
-                opacity: 0,
-                duration: 0.5
-            });
-            cleanupPage();
-        },
+    transitions: [
+        // Transition spécifique d'airdrop vers investor
+        {
+            name: 'airdrop-to-investor',
+            from: { namespace: 'airdrop' },
+            to: { namespace: 'investor' },
+            async leave(data) {
+                console.log('Transition - leave: airdrop -> investor');
+                await destroyAnimation();
+                await gsap.to(data.current.container, {
+                    opacity: 0,
+                    duration: 0.5
+                });
+                cleanupPage();
+            },
+            async beforeEnter(data) {
+                let canvasContainer = data.next.container.querySelector('#canvas-container');
+                if (!canvasContainer) {
+                    canvasContainer = document.createElement('div');
+                    canvasContainer.id = 'canvas-container';
+                    data.next.container.prepend(canvasContainer);
+                }
+                window.scrollTo(0, 0);
+            },
+            async enter(data) {
+                await gsap.from(data.next.container, {
+                    opacity: 0,
+                    duration: 0.5
+                });
+            },
+            async after(data) {
+                await new Promise(resolve => setTimeout(resolve, 50));
+                cleanupPage();
+                window.scrollTo(0, 0);
+                setTimeout(() => {
+                    initializeProgressBar('investor');
+                }, 100);
 
-        async beforeEnter(data) {
-            console.log('Transition - beforeEnter', data.next.namespace);
-            // Créer le conteneur de canvas si nécessaire
-            let canvasContainer = data.next.container.querySelector('#canvas-container');
-            if (!canvasContainer) {
-                canvasContainer = document.createElement('div');
-                canvasContainer.id = 'canvas-container';
-                data.next.container.prepend(canvasContainer);
+                try {
+                    currentAnimation = new InvestorAnimation();
+                    if (currentAnimation) {
+                        currentAnimation.start();
+                        console.log('Animation started for investor');
+                    }
+                } catch (error) {
+                    console.error('Error initializing animation:', error);
+                }
             }
-            
-            // Remettre le scroll à 0 avant d'entrer dans la nouvelle page
-            window.scrollTo(0, 0);
         },
-
-        async enter(data) {
-            console.log('Transition - enter', data.next.namespace);
-            await gsap.from(data.next.container, {
-                opacity: 0,
-                duration: 0.5
-            });
-        },
-
-        async after(data) {
-            console.log('Transition - after', data.next.namespace);
-            await new Promise(resolve => setTimeout(resolve, 50));
-            
-            // S'assurer que toutes les animations et écouteurs précédents sont nettoyés
-            cleanupPage();
-            
-            // Réinitialiser le scroll avant d'initialiser la nouvelle page
-            window.scrollTo(0, 0);
-            
-            // Initialiser la barre de progression pour la nouvelle page
-            setTimeout(() => {
-                initializeProgressBar(data.next.namespace);
-            }, 100);
-
-            try {
-                switch (data.next.namespace) {
-                    case 'airdrop':
-                        currentAnimation = new AirdropAnimation();
-                        break;
-                    case 'investor':
-                        currentAnimation = new InvestorAnimation();
-                        break;
+        // Transition spécifique d'investor vers airdrop
+        {
+            name: 'investor-to-airdrop',
+            from: { namespace: 'investor' },
+            to: { namespace: 'airdrop' },
+            async leave(data) {
+                console.log('Transition - leave: investor -> airdrop');
+                await destroyAnimation();
+                await gsap.to(data.current.container, {
+                    opacity: 0,
+                    duration: 0.5
+                });
+                cleanupPage();
+            },
+            async beforeEnter(data) {
+                let canvasContainer = data.next.container.querySelector('#canvas-container');
+                if (!canvasContainer) {
+                    canvasContainer = document.createElement('div');
+                    canvasContainer.id = 'canvas-container';
+                    data.next.container.prepend(canvasContainer);
                 }
-                
-                if (currentAnimation) {
-                    currentAnimation.start();
-                    console.log('Animation started for', data.next.namespace);
+                window.scrollTo(0, 0);
+            },
+            async enter(data) {
+                await gsap.from(data.next.container, {
+                    opacity: 0,
+                    duration: 0.5
+                });
+            },
+            async after(data) {
+                await new Promise(resolve => setTimeout(resolve, 50));
+                cleanupPage();
+                window.scrollTo(0, 0);
+                setTimeout(() => {
+                    initializeProgressBar('airdrop');
+                }, 100);
+
+                try {
+                    currentAnimation = new AirdropAnimation();
+                    if (currentAnimation) {
+                        currentAnimation.start();
+                        console.log('Animation started for airdrop');
+                    }
+                } catch (error) {
+                    console.error('Error initializing animation:', error);
                 }
-            } catch (error) {
-                console.error('Error initializing animation:', error);
             }
         }
-    }]
+    ]
 });
-
-console.log('Barba initialized with views:', barba.views);
 
 // Initialisation au chargement initial
 document.addEventListener('DOMContentLoaded', () => {
