@@ -1179,7 +1179,7 @@ export class InvestorAnimation {
             return;
         }
         this.visibilityObserver = this.createObserver(this.container);
-        const pixelRatio = window.innerWidth <= 768 ? Math.min(window.devicePixelRatio, 2) : 1;
+        // const pixelRatio = window.innerWidth <= 768 ? Math.min(window.devicePixelRatio, 2) : 1;
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(this.config.backgroundColor);
         const aspect = this.container.clientWidth / this.container.clientHeight;
