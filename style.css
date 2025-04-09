@@ -264,8 +264,133 @@ canvas {
 
 /* Media query pour les écrans plus petits */
 @media screen and (max-width: 768px) {
-    .airdrop_right {
-        width: auto;
-        min-width: 200px;
+    /* Layout vertical pour mobile */
+    .airdrop, .investor {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .airdrop_left, .investor_left {
+        flex: none;
+        height: 60vh; /* Hauteur fixe pour le conteneur du canvas */
+        min-height: 300px;
+        position: relative; /* Pas de sticky sur mobile */
+        width: 100%;
+        z-index: 1; /* S'assurer que cette section est au-dessus */
+    }
+    
+    .airdrop_right, .investor_right {
+        width: 100%;
+        min-width: 0;
+        box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.2); /* Ombre en haut au lieu de gauche */
+        position: relative;
+        z-index: 2; /* Assurer que le contenu est au-dessus du canvas */
+    }
+    
+    .airdrop_content, .investor_content {
+        height: auto; /* Hauteur automatique sur mobile */
+        min-height: 70vh; /* Ajuster pour une meilleure expérience */
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+    
+    #canvas-container {
+        height: 100%; /* Le canvas prend toute la hauteur */
+        width: 100%;
+        overflow: hidden;
+    }
+    
+    .loading-indicator {
+        position: relative; /* Position relative au lieu d'absolute */
+        bottom: auto;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 0.75rem 1rem; /* Réduire le padding */
+    }
+    
+    /* Optimisations pour les animations sur mobile */
+    canvas {
+        will-change: transform; /* Indiquer au navigateur que cet élément changera souvent */
+        transform: translateZ(0); /* Forcer l'accélération GPU */
+    }
+    
+    /* Ajustements pour l'interface générale */
+    body {
+        font-size: 14px; /* Taille de police fixe sur mobile */
+        overflow-x: hidden;
+        touch-action: pan-y; /* Optimisation tactile */
+    }
+    
+    .full-section {
+        height: 50vh; /* Réduire la hauteur de la section d'intro */
+        min-height: 200px;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    p {
+        font-size: 0.875rem;
+        line-height: 1.4;
+    }
+    
+    .indicator {
+        top: 1rem;
+        left: 1rem;
+    }
+    
+    .nav {
+        width: 90%;
+        padding: 0.5rem;
+        text-align: center;
+    }
+    
+    .nav a {
+        margin: 0 0.25rem;
+        font-size: 0.75rem;
+    }
+    
+    /* Ajustements pour les croix décoratives */
+    .crosses-wrapper {
+        height: 100%;
+    }
+    
+    .cross {
+        width: 8px;
+        height: 8px;
+    }
+    
+    /* Ajustements verticaux pour la section investor sur mobile */
+    .vertical-lines-wrapper {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        display: flex;
+        justify-content: space-evenly;
+    }
+    
+    .vertical-line {
+        height: 100%;
+        width: 1px;
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Espacements améliorés pour le contenu */
+    .content-top {
+        margin-bottom: 1rem;
+    }
+    
+    .pill {
+        margin-bottom: 0.3rem;
     }
 }
