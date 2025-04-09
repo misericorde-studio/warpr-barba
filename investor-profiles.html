@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investor Profiles</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-barba="wrapper">
+    <nav class="nav">
+        <a href="index.html">Airdrop</a>
+        <a href="investor-profiles.html">Investor Profiles</a>
+    </nav>
+    <main data-barba="container" data-barba-namespace="investor">
+        <section class="full-section">
+            <h1>Investor Profiles</h1>
+        </section>
+        <div class="investor">
+            <div class="investor_left">
+                <div class="lines">
+                    <div class="vertical-lines-wrapper">
+                        <div class="vertical-line"></div>
+                        <div class="vertical-line"></div>
+                        <div class="vertical-line"></div>
+                        <div class="vertical-line"></div>
+                        <div class="vertical-line"></div>
+                        <div class="vertical-line"></div>
+                        <div class="vertical-line"></div>
+                        <div class="vertical-line"></div>
+                        <div class="vertical-line"></div>
+                        <div class="vertical-line"></div>
+                        <div class="vertical-line"></div>
+                        <div class="vertical-line"></div>
+                    </div>
+                </div>
+                <div class="crosses-wrapper">
+                    <div class="cross cross_1"><img src="img/cross.png" alt="cross"></div>
+                    <div class="cross cross_2"><img src="img/cross.png" alt="cross"></div>
+                    <div class="cross cross_3"><img src="img/cross.png" alt="cross"></div>
+                    <div class="cross cross_4"><img src="img/cross.png" alt="cross"></div>
+                </div>
+                <div class="indicator">
+                    <div class="indicator-item"></div>
+                    <p class="indicator-name">Investor Profiles</p>
+                </div>
+    
+                <div id="canvas-container"></div>
+                
+                <div class="loading-indicator">
+                    <div class="loading-text">PROGRESSION</div>
+                    <div class="loading-progress">
+                        <div class="loading-progress-value">[ 14% ]</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="investor_right">
+                <div class="investor_content">
+                    <div class="content-top">
+                        <p class="pill">001</p>
+                        <h2>The Power of</br>Index Funds</h2>
+                    </div>
+                    <p>According to recent data that our analysts have been nibbling on, roughly 20% of all capital in the US stock market flows through index funds. In a world where 95% of fund managers fail to beat the market, stock-picking is dead. 
+                    </br>
+                    </br>
+                    The game has shifted—profits follow the flow, not the picks. Crypto moves even faster, with capital rotating at warp speed. Narratives change weekly. Winners aren't the ones picking—they're the ones positioning.
+                    
+                    </p>
+                </div>
+                <div class="investor_content">
+                    <div class="content-top">
+                        <p class="pill">002</p>
+                        <h2>The Emerging</br>Crypto Market</h2>
+                    </div>
+                    <p>The crypto market, though younger, is rapidly growing, with a current total market capitalization hovering around $3 trillion. This burgeoning field represents a massive opportunity for index fund adoption.
+                    </br>
+                    </br>
+                    If crypto index funds alone capture even 10% of this market, it would translate to a Total Value Locked (TVL) of $300 billion.
+                    </p>
+                </div>
+                <div class="investor_content">
+                    <div class="content-top">
+                        <p class="pill">003</p>
+                        <h2>Why Invest</br>Now ?</h2>
+                    </div>
+                    <p>Investing in WARPR's various strategic and narrative driven funds means positioning yourself at the forefront of financial innovation. Just as index funds transformed traditional investing by providing easy access and diversification, WARPR aims to do the same for the crypto market.
+                    </br>
+                    </br>
+                    By investing today, you become part of a movement with immense potential for growth, capturing the dynamic shifts and opportunities within the digital asset space. Don't just witness the future of finance—own a piece of it.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lenis@1.2.3/dist/lenis.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@barba/core"></script>
+    <script type="module" src="main.js"></script>
+    <!-- Script Lenis global pour toutes les pages -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            window.scrollTo(0, 0);
+            
+            // Ne créer une instance que si elle n'existe pas déjà
+            if (!window.lenis) {
+                console.log('Initializing Lenis...');
+                
+                // Créer une instance globale de Lenis
+                const lenis = new Lenis({
+                    duration: 1.2,
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                    orientation: 'vertical',
+                    gestureOrientation: 'vertical',
+                    smoothWheel: true,
+                    wheelMultiplier: 1,
+                    smoothTouch: false,
+                    touchMultiplier: 2,
+                    infinite: false,
+                });
+                
+                // Exposer l'instance globalement pour que d'autres scripts puissent y accéder
+                window.lenis = lenis;
+                
+                // Fonction RAF pour Lenis
+                function raf(time) {
+                    window.lenis.raf(time);
+                    window.lenisRAF = requestAnimationFrame(raf);
+                }
+                
+                // Démarrer la boucle d'animation
+                window.lenisRAF = requestAnimationFrame(raf);
+            }
+        });
+        
+        // Nettoyage lors du déchargement de la page
+        window.addEventListener('beforeunload', () => {
+            if (window.lenisRAF) {
+                cancelAnimationFrame(window.lenisRAF);
+            }
+        });
+    </script>
+    <!-- Les scripts inline ont été supprimés pour éviter les conflits avec main.js qui gère maintenant la progression -->
+</body>
+</html> 

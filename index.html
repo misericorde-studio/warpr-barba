@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airdrop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-barba="wrapper">
+    <nav class="nav">
+        <a href="index.html">Airdrop</a>
+        <a href="investor-profiles.html">Investor Profiles</a>
+    </nav>
+    <main data-barba="container" data-barba-namespace="airdrop">
+        <section class="full-section">
+            <h1>Airdrop</h1>
+        </section>
+        <div class="airdrop">
+            <div class="airdrop_left">
+                <div class="crosses-wrapper">
+                    <div class="cross cross_1"><img src="img/cross.png" alt="cross"></div>
+                    <div class="cross cross_2"><img src="img/cross.png" alt="cross"></div>
+                    <div class="cross cross_3"><img src="img/cross.png" alt="cross"></div>
+                    <div class="cross cross_4"><img src="img/cross.png" alt="cross"></div>
+                </div>
+                <div class="indicator">
+                    <div class="indicator-item"></div>
+                    <p class="indicator-name">Airdrop</p>
+                </div>
+    
+                <div id="canvas-container"></div>
+                
+                <div class="loading-indicator">
+                    <div class="loading-text">PROGRESSION</div>
+                    <div class="loading-progress">
+                        <div class="loading-progress-value">[ 14% ]</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="airdrop_right">
+                <div class="airdrop_content">
+                    <div class="content-top">
+                        <p class="pill">001</p>
+                        <h2>Stake Tokens</h2>
+                    </div>
+                    <p>Stake your Smart Fund tokens on the WARPR DApp to unlock an exciting rewards system.</p>
+                </div>
+                <div class="airdrop_content">
+                    <div class="content-top">
+                        <p class="pill">002</p>
+                        <h2>Earn Carrot <br>Points</h2>
+                    </div>
+                    <p>Farm carrot points passively just by staking, and complete quests to unlock powerful yield boosts and score juicy bonuses.</p>
+                </div>
+                <div class="airdrop_content">
+                    <div class="content-top">
+                        <p class="pill">003</p>
+                        <h2>Burn Points<br>for</h2>
+                    </div>
+                    <p>- Airdrop of [cǒ̵̠̄r̸͎͔͐rụ̶̬̉p̴̱̑̿t̷͉̤̑é̶̞ḋ̶̯ ̸͔̔d̷̘͊a̵̲̪̾t̴͙͒a̴̰̍]</br>
+                        - Degenerately engineered physical goods</br>
+                        - Whitelists and allocations in partnered projects</br>
+                        - Treasure like the One Piece (it's real)</p>
+                </div>
+            </div>
+        </div>   
+    </main>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lenis@1.2.3/dist/lenis.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@barba/core"></script>
+    <script type="module" src="main.js"></script>
+    <!-- Script Lenis global pour toutes les pages -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            window.scrollTo(0, 0);
+            
+            // Ne créer une instance que si elle n'existe pas déjà
+            if (!window.lenis) {
+                console.log('Initializing Lenis...');
+                
+                // Créer une instance globale de Lenis
+                const lenis = new Lenis({
+                    duration: 1.2,
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                    orientation: 'vertical',
+                    gestureOrientation: 'vertical',
+                    smoothWheel: true,
+                    wheelMultiplier: 1,
+                    smoothTouch: false,
+                    touchMultiplier: 2,
+                    infinite: false,
+                });
+                
+                // Exposer l'instance globalement pour que d'autres scripts puissent y accéder
+                window.lenis = lenis;
+                
+                // Fonction RAF pour Lenis
+                function raf(time) {
+                    window.lenis.raf(time);
+                    window.lenisRAF = requestAnimationFrame(raf);
+                }
+                
+                // Démarrer la boucle d'animation
+                window.lenisRAF = requestAnimationFrame(raf);
+            }
+        });
+        
+        // Nettoyage lors du déchargement de la page
+        window.addEventListener('beforeunload', () => {
+            if (window.lenisRAF) {
+                cancelAnimationFrame(window.lenisRAF);
+            }
+        });
+    </script>
+    <!-- Les scripts inline ont été supprimés pour éviter les conflits avec main.js qui gère maintenant la progression -->
+</body>
+</html> 

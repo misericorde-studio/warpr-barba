@@ -1,0 +1,271 @@
+@font-face {
+    font-family: 'MonumentGroteskMono-Light';
+    src: url('/fonts/ABCMonumentGroteskMono-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'MonumentGroteskMono-Regular';
+    src: url('/fonts/ABCMonumentGroteskMono-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    margin: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #0B0E13;
+    color: #fff;
+    font-family: 'MonumentGroteskMono-Regular', Arial, sans-serif;
+    font-size: 1vw;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+.full-section {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} 
+
+.nav {
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.nav a {
+    color: #333;
+    text-decoration: none;
+    margin: 0 0.5rem;
+    text-transform: uppercase;
+}
+
+.nav a:hover {
+    text-decoration: underline;
+}
+
+.barba-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.fade-enter {
+    opacity: 0;
+}
+
+.fade-enter-active {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.fade-leave {
+    opacity: 1;
+}
+
+.fade-leave-active {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+::-webkit-scrollbar {
+display: none;
+}
+
+h1 {
+    font-size: clamp(2rem, 2.5em, 4.5rem);
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+h2 {
+    font-size: clamp(1rem, 1.5em, 3.5rem);
+    line-height: 1;
+}
+
+.pill {
+    font-size: clamp(0.625rem, 0.625em, 2rem);
+    margin-bottom: .5rem;
+}
+
+p {
+    font-size: clamp(0.75rem, 0.75em, 1.75rem);
+    line-height: 1.28;
+    font-family: 'MonumentGroteskMono-Light', Arial, sans-serif;
+}
+
+
+.indicator {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    position: absolute;
+    top:1.5rem;
+    left: 1.5rem;
+    z-index: 100;
+}
+
+.crosses-wrapper{
+    position: absolute;
+    z-index: 110;
+    height: calc(100% - 3.5rem);
+    width: 100%;
+    pointer-events: none;
+}
+
+.cross{
+    width: 10px;
+    height: 10px;
+    position: absolute;
+}
+
+.cross_1{
+    top: 20%;
+    left: 20%;
+}
+
+.cross_2{
+    top: 20%;
+    right: 20%;
+}
+
+.cross_3{
+    bottom: 20%;
+    left: 20%;
+}
+
+.cross_4{
+    bottom: 20%;
+    right: 20%;
+}
+
+
+.indicator-item {
+    width: 5px;
+    height: 5px;
+    background-color: #00FEA5;
+    filter: drop-shadow(0px 0px 6px #00FEA5) drop-shadow(0px 0px 11px #4FFFC1);
+    border-radius: 50%;
+}
+
+.indicator-name{
+    font-size: clamp(0.625rem, 0.625em, 2rem);
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.airdrop, .investor {
+    display: flex;
+    width: 100%;
+    min-height: calc(100vh - 3.5rem);
+    min-width: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.airdrop_left, .investor_left {
+    flex: 1;
+    min-width: 0;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+}
+
+.airdrop_right, .investor_right {
+    width: 30vw;
+    min-width: 30vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    box-shadow:inset 1px 0px 0px 0px rgba(255, 255, 255, 0.2);
+    
+}
+
+.airdrop_content, .investor_content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1.5rem 1.5rem 2.5rem 1.5rem ;
+    gap: 2rem;
+    height: 100vh;
+}
+
+.content-top {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#canvas-container {
+    width: 100%;
+    height: calc(100% - 3.5rem);
+    position: relative;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Loading indicator styles */
+.loading-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3.5rem;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'MonumentGroteskMono-Regular', monospace;
+    font-size: clamp(0.625rem, 0.625em, 2rem);
+    text-transform: uppercase;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: #0B0E13;
+    z-index: 10;
+}
+
+.loading-text {
+    color: #fff;
+}
+
+.loading-progress {
+    display: flex;
+    align-items: center;
+}
+
+
+.loading-progress-value {
+    color: #fff;
+    min-width: 4rem;
+    text-align: left;
+}
+
+/* Media query pour les écrans plus petits */
+@media screen and (max-width: 768px) {
+    .airdrop_right {
+        width: auto;
+        min-width: 200px;
+    }
+}
