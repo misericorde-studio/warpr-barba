@@ -1082,6 +1082,7 @@ export class InvestorAnimation {
         this.positions = null;
         this.phaseOffsets = [0, Math.PI/2, Math.PI, Math.PI*3/2];
         this.frequencyMultipliers = [1, 0.5, 0.7, 0.3];
+        this.hasFirstFrameRunCompleted = false;
         this.amplitudeMultipliers = [1.5, 0.7, 0.01, 0.002];
         this.resizeTimeout = null;
         this.resizeThrottleTime = 150;
@@ -1128,6 +1129,44 @@ export class InvestorAnimation {
     start() {
         // Initialize everything
         this.init();
+        
+        // Pre-position particles to avoid abrupt size change on first scroll
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            // Simulate initial scroll position for mobile
+            setTimeout(() => {
+                // Force an initial updateScroll to set the correct particle positions and sizes
+                this.updateScroll();
+                
+                // Position the particles as if we're already scrolled a bit
+                if (this.particles) {
+                    const initialScrollProgress = 10; // Small value to force correct initial state
+                    const rotationY = -(initialScrollProgress / 100) * (180 * Math.PI / 180);
+                    this.particles.rotation.y = rotationY;
+                    this.currentRotationY = rotationY;
+                    this.targetRotationY = rotationY;
+                    
+                    if (this.borderParticles) {
+                        this.borderParticles.rotation.copy(this.particles.rotation);
+                    }
+                    
+                    // Update sizes immediately for mobile
+                    const scaleFactor = this.container.clientWidth / 1920 * 1.5; // Mobile scaling factor
+                    if (this.particles && this.particles.material && this.particles.material.uniforms) {
+                        this.particles.material.uniforms.scaleFactor.value = scaleFactor;
+                        this.particles.material.uniforms.pointSize.value = this.config.particleSize * 1.2; // Mobile size multiplier
+                    }
+                    
+                    if (this.borderParticles && this.borderParticles.material && this.borderParticles.material.uniforms) {
+                        this.borderParticles.material.uniforms.scaleFactor.value = scaleFactor;
+                        this.borderParticles.material.uniforms.pointSize.value = this.config.borderParticleSize * 1.2; // Mobile size multiplier
+                    }
+                    
+                    // Force a render with the new values
+                    this.renderer.render(this.scene, this.camera);
+                }
+            }, 50); // Small delay to ensure particles are initialized
+        }
         
         // Start animation loop
         this.lastFrameTime = performance.now();
@@ -1340,6 +1379,38 @@ export class InvestorAnimation {
 
     animate(timestamp) {
         requestAnimationFrame(this.animate);
+        
+        // Pré-positionnement des particules au premier frame si nécessaire
+        if (!this.hasFirstFrameRunCompleted && this.particles) {
+            this.hasFirstFrameRunCompleted = true;
+            const isMobile = window.innerWidth <= 768;
+            
+            if (isMobile) {
+                // Forcer les tailles et paramètres corrects dès le premier frame sur mobile
+                const scaleFactor = this.container.clientWidth / 1920 * 1.5; // Facteur d'échelle mobile
+                
+                if (this.particles && this.particles.material && this.particles.material.uniforms) {
+                    this.particles.material.uniforms.scaleFactor.value = scaleFactor;
+                    this.particles.material.uniforms.pointSize.value = this.config.particleSize * 1.2;
+                }
+                
+                if (this.borderParticles && this.borderParticles.material && this.borderParticles.material.uniforms) {
+                    this.borderParticles.material.uniforms.scaleFactor.value = scaleFactor;
+                    this.borderParticles.material.uniforms.pointSize.value = this.config.borderParticleSize * 1.2;
+                }
+                
+                // Simuler une petite rotation initiale
+                const initialScrollProgress = 10; 
+                this.targetRotationY = -(initialScrollProgress / 100) * (180 * Math.PI / 180);
+                this.currentRotationY = this.targetRotationY;
+                this.particles.rotation.y = this.currentRotationY;
+                
+                if (this.borderParticles) {
+                    this.borderParticles.rotation.copy(this.particles.rotation);
+                }
+            }
+        }
+        
         if (window.lenis && (timestamp - this.lastFrameTime >= 16)) {
             window.lenis.raf(timestamp);
         }
