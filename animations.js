@@ -1179,7 +1179,9 @@ export class InvestorAnimation {
             return;
         }
         this.visibilityObserver = this.createObserver(this.container);
-        // const pixelRatio = window.innerWidth <= 768 ? Math.min(window.devicePixelRatio, 2) : 1;
+        const pixelRatio = window.innerWidth <= 768 ? Math.min(window.devicePixelRatio) : 1;
+        // this.renderer.setPixelRatio(window.devicePixelRatio);
+
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(this.config.backgroundColor);
         const aspect = this.container.clientWidth / this.container.clientHeight;
@@ -2002,7 +2004,9 @@ export class InvestorAnimation {
             this.borderParticles.material.uniforms.scaleFactor.value = scaleFactor;
             this.borderParticles.material.uniforms.pointSize.value = this.config.borderParticleSize * (isMobile ? 1.2 : 1.0);
         }
-        const pixelRatio = isMobile ? Math.min(window.devicePixelRatio, 2) : 1;
+        const pixelRatio = isMobile ? Math.min(window.devicePixelRatio) : 1;
+        // this.renderer.setPixelRatio(window.devicePixelRatio);
+
         this.renderer.setPixelRatio(pixelRatio);
         this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
     }
@@ -2196,7 +2200,8 @@ export class InvestorAnimation {
                 }
                 
                 // Ajuster le ratio de pixels et la taille du renderer
-                const pixelRatio = isMobile ? Math.min(window.devicePixelRatio, 2) : 1;
+                const pixelRatio = isMobile ? Math.min(window.devicePixelRatio):1;
+
                 this.renderer.setPixelRatio(pixelRatio);
                 this.renderer.setSize(this.container.clientWidth, this.container.clientHeight, false);
                 
